@@ -25,7 +25,7 @@
 
 void user_program_init(void)
 {
-    start_after_wake = &setup_screen;	//Set function to run when waking from sleep]
+    start_after_wake = &setup_screen;	//Set function to run when waking from sleep
     clr_buffer();
     enable_display_scanning(0);
     loadQrText();
@@ -34,6 +34,7 @@ void user_program_init(void)
 
 void setup_screen(void)
 {
+    // Clear and redraw the screen after starting or waking up
     tft_fill_area (0, 0, 319, 239, BACKGROUND_COLOR);
     updateScreen();
 }
@@ -87,14 +88,15 @@ void updateText(void)
     // Display the current String
     printString("Type in a QR Code String:", 10, maxQrHeight + 5, FOREGROUND_COLOR, BACKGROUND_COLOR);
     if (strlen(qrText) <= 40) {
+        // Only one line
         printString(qrText, 0, maxQrHeight + 20, FOREGROUND_COLOR, BACKGROUND_COLOR);
     } else {
-        // Draw first half
+        // Draw first line
         memcpy(qrTextFragment, &qrText[0], 40);
         qrTextFragment[40] = '\0';
         printString(qrTextFragment, 0, maxQrHeight + 20, FOREGROUND_COLOR, BACKGROUND_COLOR);
 
-        // Draw second half
+        // Draw second line
         memcpy(qrTextFragment, &qrText[40], strlen(qrText) - 40);
         qrTextFragment[strlen(qrText) - 40] = '\0';        
         printString(qrTextFragment, 0, maxQrHeight + 35, FOREGROUND_COLOR, BACKGROUND_COLOR);
@@ -118,10 +120,11 @@ void updateQrCode(void)
 void backspace(void)
 {
     if (strlen(qrText) > 0) {
+        // Move the Terminator up one space and save
         qrText[strlen(qrText) - 1] = '\0';
         saveQrText();
         
-        // Write a space over the last character
+        // Determine where the last character was
         int charHeight = maxQrHeight + 20;
         int charLeft = strlen(qrText) * 8;
         if (strlen(qrText) > 40) {
@@ -129,6 +132,7 @@ void backspace(void)
             charLeft -= 320;
         }
         
+        // Write a space over the last character
         printString(" ", charLeft, charHeight, FOREGROUND_COLOR, BACKGROUND_COLOR);
         if (strlen(qrText) == 40) {
             tft_fill_area (0, maxQrHeight, 319, 239 - maxQrHeight, BACKGROUND_COLOR);
@@ -138,8 +142,9 @@ void backspace(void)
 
 void printString(const char * string, uint16_t x_pixel, uint8_t y_pixel, uint32_t fgcolor, uint32_t bgcolor)
 {
-	uint8_t i=0;
-    
+	uint8_t i = 0;
+
+    // Print out the string one character at a time
 	while (i < strlen(string)) {
 		tft_print_char((uint8_t)string[i], x_pixel+(i*8), y_pixel, fgcolor, bgcolor);
 		++i;
@@ -176,6 +181,7 @@ static void printQr(const uint8_t qrcode[])
 
 void saveQrText(void)
 {
+    // Save qrText to memory at location USERPROG_BASEADDR
     uint8_t * data = (uint8_t *) qrText;
 	uint32_t addr = USERPROG_BASEADDR;
     fl_erase_4k(addr);
@@ -184,8 +190,8 @@ void saveQrText(void)
 
 void loadQrText(void)
 {
+    // Retrieve qrText from memory at location USERPROG_BASEADDR
     uint8_t data[BPROG_SECSIZ];
-
 	fl_read_4k(USERPROG_BASEADDR, data);	
 
     // If no data stored, load empty string
