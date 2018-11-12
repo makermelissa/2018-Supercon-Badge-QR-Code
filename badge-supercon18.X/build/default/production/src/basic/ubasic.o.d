@@ -1,0 +1,20 @@
+build/default/production/src/basic/ubasic.o:  \
+src/basic/ubasic.c  \
+ src/basic/ubasic.h  \
+src/basic/../badge.h  \
+src/basic/../tune_player.h  \
+ src/basic/../splash.h  \
+src/basic/../tetrapuzz.h  \
+src/basic/../post.h  \
+ src/basic/../badge_settings.h  \
+src/basic/../snake.h  \
+src/basic/../puzzle.h  \
+ src/basic/../user_program.h  \
+src/basic/../vt100.h  \
+src/basic/../Z80/hwz.h  \
+ src/basic/../Z80/../badge_settings.h  \
+src/basic/../hw.h  \
+ src/basic/../disp.h  \
+src/basic/../hw.h  \
+src/basic/../vt100.h  \
+ src/basic/tokenizer.h 
