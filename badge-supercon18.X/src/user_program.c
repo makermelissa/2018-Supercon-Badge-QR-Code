@@ -66,12 +66,6 @@ void user_program_loop(void)
             updateScreen();
         }
     }
-    
-    // Waste some time but less than 1 ms
-    uint16_t quickdelay = 2000;
-    while (quickdelay) {
-        --quickdelay;
-    }
 }
 
 void updateScreen(void)
